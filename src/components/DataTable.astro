@@ -1,0 +1,46 @@
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const placeholder = document.getElementById('placeholder');
+    const dataTable = document.getElementById('dataTable');
+    const head = document.getElementById('tableHeadRow');
+    const body = document.getElementById('tableBody');
+
+    if (!placeholder || !dataTable || !head || !body) return;
+
+    window.addEventListener('sql-run', (e) => {
+      const sql = e.detail;
+
+      // Mostrar estado de carga
+      placeholder.textContent = 'Consultando...';
+      placeholder.style.display = 'block';
+      dataTable.style.display = 'none';
+
+      // Simulación de respuesta
+      setTimeout(() => {
+        const data = [
+          { id: 1, producto: 'Camisa', precio: 120, cantidad: 2 },
+          { id: 2, producto: 'Pantalón', precio: 80, cantidad: 1 },
+        ];
+
+        if (data.length === 0) {
+          placeholder.textContent = "La consulta no devolvió nada";
+          return;
+        }
+
+        // Construir tabla
+        head.innerHTML = Object.keys(data[0])
+          .map(c => `<th>${c}</th>`)
+          .join('');
+
+        body.innerHTML = data
+          .map(row => `<tr>${Object.values(row)
+            .map(v => `<td>${v}</td>`)
+            .join('')}</tr>`)
+          .join('');
+
+        placeholder.style.display = 'none';
+        dataTable.style.display = 'table';
+      }, 500);
+    });
+  });
+</script>
